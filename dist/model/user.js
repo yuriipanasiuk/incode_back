@@ -5,11 +5,11 @@ const mongoose_1 = require("mongoose");
 const userModel = new mongoose_1.Schema({
     fullName: {
         type: String,
-        require: [true, "Write your name"],
+        require: [true, "Write your full name"],
     },
     userName: {
         type: String,
-        require: [true, "Emails is require"],
+        require: [true, "Name is require"],
         unique: true,
     },
     password: {

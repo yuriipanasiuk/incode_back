@@ -19,23 +19,23 @@ const user_1 = require("../model/user");
 const ACCESS_SECRET_KEY = process.env.ACCESS_SECRET_KEY;
 const auth = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { authorization = '' } = req.headers;
-        const [type, token] = authorization.split(' ');
-        if (type !== 'Bearer') {
-            return next((0, http_errors_1.default)(401, 'Not autorized'));
+        const { authorization = "" } = req.headers;
+        const [type, token] = authorization.split(" ");
+        if (type !== "Bearer") {
+            return next((0, http_errors_1.default)(401, "Not autorized"));
         }
         const { id } = jsonwebtoken_1.default.verify(token, ACCESS_SECRET_KEY);
         const user = yield user_1.User.findOne({ _id: id });
         if (!user || !user.accessToken) {
-            return next((0, http_errors_1.default)(401, 'Not autorized'));
+            return next((0, http_errors_1.default)(401, "Not autorized"));
         }
         req.user = user;
         next();
     }
     catch (error) {
         if (error instanceof Error) {
-            if (error.message === 'invalid signature') {
-                return res.status(401).json({ error: 'Not autorized' });
+            if (error.message === "invalid signature") {
+                return res.status(401).json({ error: "Not autorized" });
             }
         }
         next(error);

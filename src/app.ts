@@ -14,15 +14,16 @@ app.use(cors());
 app.use(express.json());
 app.use(logger(formatLogger));
 
-app.use('/auth', authRouter);
+app.use("/auth", authRouter);
 
 app.use((_req: Request, res: Response) => {
-    res.status(404).json({ message: "Not found" });
-  });
-  
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const { status = 500 } = err;
-    res.status(status).json({ message: err.message });
-  });
-  
-  export default app;
+  res.status(404).json({ message: "Not found" });
+});
+
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const { status = 500 } = err;
+
+  return res.status(status).json({ message: err.message });
+});
+
+export default app;

@@ -4,14 +4,13 @@ const userModel = new Schema(
   {
     fullName: {
       type: String,
-      require: [true, "Write your name"],
+      require: [true, "Write your full name"],
     },
     userName: {
       type: String,
-      require: [true, "Emails is require"],
+      require: [true, "Name is require"],
       unique: true,
     },
-
     password: {
       type: String,
       require: [true, "Set password for user"],

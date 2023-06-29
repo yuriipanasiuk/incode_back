@@ -61,7 +61,7 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
             id: user._id,
         };
         const accessToken = jsonwebtoken_1.default.sign(payload, ACCESS_SECRET_KEY, {
-            expiresIn: "2m",
+            expiresIn: "3h",
         });
         const refreshToken = jsonwebtoken_1.default.sign(payload, REFRESH_SECRET_KEY, {
             expiresIn: "7h",
@@ -77,7 +77,6 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
     }
     catch (error) {
         next(error);
-        console.log(error);
     }
 });
 exports.loginUser = loginUser;
@@ -117,7 +116,7 @@ const refresh = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
             id,
         };
         const accessToken = jsonwebtoken_1.default.sign(payload, ACCESS_SECRET_KEY, {
-            expiresIn: "2m",
+            expiresIn: "3h",
         });
         const refreshToken = jsonwebtoken_1.default.sign(payload, REFRESH_SECRET_KEY, {
             expiresIn: "7h",
@@ -128,7 +127,9 @@ const refresh = (req, res, next) => __awaiter(void 0, void 0, void 0, function* 
         });
     }
     catch (error) {
-        next((0, http_errors_1.default)(403, "error"));
+        if (error instanceof Error) {
+            next((0, http_errors_1.default)(403, error.message));
+        }
     }
 });
 exports.refresh = refresh;

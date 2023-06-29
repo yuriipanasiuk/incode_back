@@ -17,14 +17,14 @@ export interface CustomRequest extends Request {
 }
 
 export interface IValidateRegisterSchema {
-  name: string;
-  email: string;
+  fullName: string;
+  userName: string;
   password: string;
 }
 
 export interface IValidateSchema {
-  name?: string;
-  email: string;
+  fullName?: string;
+  userName: string;
   password: string;
 }
 

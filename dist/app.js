@@ -14,13 +14,13 @@ const formatLogger = app.get("env") === "development" ? "dev" : "short";
 app.use((0, cors_1.default)());
 app.use(express_1.default.json());
 app.use((0, morgan_1.default)(formatLogger));
-app.use('/auth', auth_1.default);
+app.use("/auth", auth_1.default);
 app.use((_req, res) => {
     res.status(404).json({ message: "Not found" });
 });
 app.use((err, _req, res, _next) => {
     const { status = 500 } = err;
-    res.status(status).json({ message: err.message });
+    return res.status(status).json({ message: err.message });
 });
 exports.default = app;
 //# sourceMappingURL=app.js.map

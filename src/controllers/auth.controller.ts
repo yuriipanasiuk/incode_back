@@ -15,7 +15,7 @@ const singUp = async (req: Request, res: Response, next: NextFunction) => {
   const { fullName, userName, password } = req.body;
 
   try {
-    const user = await User.findOne({ userName });
+    const user: IUser | null = await User.findOne({ userName });
     const hashPassword = await bscrypt.hash(password, 10);
     if (user) {
       return next(httpError(409, "User name in use"));
@@ -59,7 +59,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "2m",
+      expiresIn: "3h",
     });
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
       expiresIn: "7h",
@@ -76,8 +76,6 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
     });
   } catch (error) {
     next(error);
-
-    console.log(error);
   }
 };
 
@@ -127,7 +125,7 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
     };
 
     const accessToken = jwt.sign(payload, ACCESS_SECRET_KEY, {
-      expiresIn: "2m",
+      expiresIn: "3h",
     });
 
     const refreshToken = jwt.sign(payload, REFRESH_SECRET_KEY, {
@@ -138,8 +136,10 @@ const refresh = async (req: Request, res: Response, next: NextFunction) => {
       accessToken,
       refreshToken,
     });
-  } catch (error) {
-    next(httpError(403, "error"));
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      next(httpError(403, error.message));
+    }
   }
 };
 
