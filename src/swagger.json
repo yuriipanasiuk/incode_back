@@ -1,0 +1,179 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "user auth",
+    "version": "v1"
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [
+    {
+      "url": "https://incode.onrender.com/auth"
+    },
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users"
+    }
+  ],
+
+  "paths": {
+    "/signup": {
+      "post": {
+        "summary": "Create user",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/signupRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/definitions/emailResponses" }
+              }
+            }
+          },
+          "409": { "description": "user name in use" }
+        }
+      }
+    },
+    "/login": {
+      "post": {
+        "summary": "Logs user into the system",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "description": "object with user and password",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/loginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "password/email is wrong or email is not verified"
+          }
+        }
+      }
+    },
+    "/current": {
+      "get": {
+        "summary": "Current User",
+        "tags": ["Users"],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+
+    "/logout": {
+      "post": {
+        "summary": "Logs out current logged in user session",
+        "tags": ["Users"],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "successful operation"
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/{verificationToken}": {
+      "post": {
+        "summary": "Email verification by token",
+        "tags": ["Users"],
+        "parameters": [
+          {
+            "name": "verificationToken",
+            "in": "path",
+            "required": true,
+            "description": "User verificationToken",
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzY2MxYzI5NDcyMzQ4Njc3OTViMjlhNCIsImlhdCI6MTY3NTAxNjc1NywiZXhwIjoxNjc1MDQ1NTU3fQ._Em1_v9Ii4xNN5DFfLu95g0Boe3ZBobaTV8Ao2wyLnc"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Verification successful" },
+          "404": { "description": "User not found" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "signupRequest": {
+      "type": "object",
+      "required": ["fullName", "userName", "password"],
+      "properties": {
+        "fullName": { "type": "string" },
+        "userName": { "type": "string", "format": "text" },
+        "password": { "type": "string" }
+      }
+    },
+    "loginRequest": {
+      "type": "object",
+      "required": ["userName", "password"],
+      "properties": {
+        "userName": { "type": "string", "format": "text" },
+        "password": { "type": "string" }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "fullName": { "type": "string" },
+          "userName": { "type": "string", "format": "email" },
+          "password": { "type": "string" },
+          "accessToken": { "type": "string" },
+          "refreshToken": { "type": "string" }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
