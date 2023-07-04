@@ -48,7 +48,7 @@ const loginUser = async (req: Request, res: Response, next: NextFunction) => {
       return next(httpError(401, "User name or password is wrong"));
     }
 
-    const passwordCompare = bscrypt.compare(password, user.password);
+    const passwordCompare = await bscrypt.compare(password, user.password);
 
     if (!passwordCompare) {
       return next(httpError(401, "User name  or password is wrong"));

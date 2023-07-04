@@ -16,6 +16,5 @@ router.post("/login", (0, validation_1.default)(validateLoginField_1.default), a
 router.post("/logout", auth_1.auth, auth_controller_1.logOut);
 router.post("/refresh", (0, validation_1.default)(validateRefreshToken_1.default), auth_controller_1.refresh);
 router.get("/current", auth_1.auth, auth_controller_1.getCurrent);
-router.get("/docs");
 exports.default = router;
 //# sourceMappingURL=auth.js.map

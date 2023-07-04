@@ -53,7 +53,7 @@ const loginUser = (req, res, next) => __awaiter(void 0, void 0, void 0, function
         if (!user) {
             return next((0, http_errors_1.default)(401, "User name or password is wrong"));
         }
-        const passwordCompare = bcryptjs_1.default.compare(password, user.password);
+        const passwordCompare = yield bcryptjs_1.default.compare(password, user.password);
         if (!passwordCompare) {
             return next((0, http_errors_1.default)(401, "User name  or password is wrong"));
         }
